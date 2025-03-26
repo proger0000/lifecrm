@@ -1,3 +1,109 @@
+/* Основні Tailwind директиви */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Підключення шрифту Comforta */
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+
+/* Основні змінні кольорів */
+:root {
+  --primary-color: #f44336;
+  --primary-dark: #d32f2f;
+  --primary-light: #ffcdd2;
+  --secondary-color: #2196f3;
+  --secondary-dark: #0069c0;
+  --background-color: #f5f5f5;
+  --surface-color: #ffffff;
+  --text-color: #333333;
+  --text-light: #757575;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+}
+
+/* Базові стилі */
+body {
+  font-family: 'Comfortaa', system-ui, -apple-system, sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* Компоненти Tailwind */
+@layer components {
+  /* Кнопки */
+  .btn-primary {
+    @apply bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded;
+  }
+  
+  .btn-secondary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded;
+  }
+  
+  /* Картки */
+  .card {
+    @apply bg-white rounded-lg shadow overflow-hidden;
+  }
+  
+  .card-header {
+    @apply p-6 border-b border-gray-200;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+  
+  /* Статуси */
+  .status-active {
+    @apply bg-green-100 text-green-800 px-2 py-1 text-xs font-semibold rounded-full;
+  }
+  
+  .status-pending {
+    @apply bg-blue-100 text-blue-800 px-2 py-1 text-xs font-semibold rounded-full;
+  }
+  
+  .status-completed {
+    @apply bg-gray-100 text-gray-800 px-2 py-1 text-xs font-semibold rounded-full;
+  }
+}
+
+/* Стилі для мобільної оптимізації */
+@media (max-width: 640px) {
+  /* Більші елементи інтерфейсу для керування на тач-пристроях */
+  input, select, button, .btn {
+    min-height: 44px;
+  }
+  
+  /* Зручне відображення таблиць на мобільних */
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* Висококонтрастні елементи для покращення видимості на яскравому світлі */
+.high-contrast {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+/* Стилі для відображення панелі навігації */
+.sidebar {
+  width: 16rem;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

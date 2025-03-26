@@ -1,28 +1,51 @@
-const CACHE_NAME = "lifecrm-cache-v1";
-const urlsToCache = [
+// Найпростіший Service Worker для усунення 404 помилок
+// Після успішного запуску можна буде його розширити
+
+const CACHE_NAME = 'kls-cabinet-v1';
+
+// Мінімальний набір для кешування
+const INITIAL_ASSETS = [
   '/',
-  '/css/app.css',
-  '/js/app.js'
-  // Добавь другие файлы, которые хочешь кэшировать
+  '/manifest.json'
 ];
 
-// Установка Service Worker и кэширование файлов
-self.addEventListener('install', function(event) {
+// Установка Service Worker і кешування базових ресурсів
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Cache opened');
-        return cache.addAll(urlsToCache);
+      .then((cache) => {
+        console.log('Базовий кеш створено:', CACHE_NAME);
+        return cache.addAll(INITIAL_ASSETS);
       })
+      .then(() => self.skipWaiting())
   );
 });
 
-// Обработка запросов: сначала пытаемся получить данные из кэша
-self.addEventListener('fetch', function(event) {
+// Активація Service Worker
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+  console.log('Service Worker активовано');
+});
+
+// Найпростіша стратегія обробки запитів:
+// 1. Спробувати отримати з мережі
+// 2. Якщо не вдалося, спробувати з кешу
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        return response || fetch(event.request);
+    fetch(event.request)
+      .then((response) => {
+        // Успішна відповідь - кешуємо її для майбутнього
+        if (response.status === 200 && event.request.method === 'GET') {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Якщо мережа недоступна, повертаємо з кешу
+        return caches.match(event.request);
       })
   );
 });
